@@ -1,0 +1,2 @@
+# adminico
+Admin app
