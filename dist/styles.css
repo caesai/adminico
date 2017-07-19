@@ -1,0 +1,15 @@
+.loginBlock {
+  width: 400px;
+  margin: 0 auto;
+  border: 1px solid rgba(0, 0, 0, 0.4);
+  border-radius: 3px;
+  padding: 30px 15px;
+  color: #000; }
+  .loginBlock input {
+    display: block;
+    padding: 4px;
+    margin-bottom: 10px;
+    width: 100%;
+    box-sizing: border-box; }
+  .loginBlock h3 {
+    margin-top: 0; }
