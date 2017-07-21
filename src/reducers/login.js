@@ -1,3 +1,5 @@
+import {createReducer} from '../utils';
+
 const initialState = {
   token: null,
   userName: null,
@@ -7,38 +9,45 @@ const initialState = {
   statusText: null
 };
 
-export default function Login(state = initialState, action){
-  switch (action.type) {
-    case 'LOGIN_USER_REQUEST':
-          return Object.assign({}, state, {
-              'isAuthenticating': true,
-              'statusText': null
-          });
-    case 'LOGIN_USER_SUCCESS':
-          return Object.assign({}, state, {
-              'isAuthenticating': false,
-              'isAuthenticated': true,
-              'token': action.token,
-              'userName': 'admin',
-              'userName': action.userName,
-              'statusText': 'You have been successfully logged in.'
-          });
+export default createReducer(initialState, {
+    ['LOGIN_USER_REQUEST']: (state, payload) => {
+        return Object.assign({}, state, {
+            'isAuthenticating': true,
+            'statusText': null
+        });
+    },
+    ['WALLET_LOGIN_REQUEST']: (state, payload) => {
+        return Object.assign({}, state, {
+            'isAuthenticating': true,
+            'statusText': null
+        });
+    },
+    ['LOGIN_USER_SUCCESS']: (state, payload) => {
+        return Object.assign({}, state, {
+            'isAuthenticating': false,
+            'isAuthenticated': true,
+            'token': payload.token,
+            'userName': 'admin',
+            // 'userName': jwtDecode(payload.token).userName,
+            'statusText': 'You have been successfully logged in.'
+        });
 
-    case 'LOGIN_USER_FAILURE':
-          return Object.assign({}, state, {
-              'isAuthenticating': false,
-              'isAuthenticated': false,
-              'token': null,
-              'userName': null,
-              'statusText': `Authentication Error: ${action.status} ${action.statusText}`
-          });
-    case 'LOGOUT_USER':
-          return Object.assign({}, state, {
-              'isAuthenticated': false,
-              'token': null,
-              'userName': null,
-              'statusText': 'You have been successfully logged out.'
-          });
-    default: return state;
-  }
-};
+    },
+    ['LOGIN_USER_FAILURE']: (state, payload) => {
+        return Object.assign({}, state, {
+            'isAuthenticating': false,
+            'isAuthenticated': false,
+            'token': null,
+            'userName': null,
+            'statusText': `Authentication Error: ${payload.status} ${payload.statusText}`
+        });
+    },
+    ['LOGOUT_USER']: (state, payload) => {
+        return Object.assign({}, state, {
+            'isAuthenticated': false,
+            'token': null,
+            'userName': null,
+            'statusText': 'You have been successfully logged out.'
+        });
+    }
+});
