@@ -80,11 +80,9 @@ const mapStateToProps = (state) => ({
   location: state.router.location
 });
 
-connect(
-  mapStateToProps
-)
 
-export class LoginView extends React.Component {
+
+class LoginView extends React.Component {
   constructor(props) {
     super(props);
     const redirectRoute = this.props.location.query.next || '/login';
@@ -127,3 +125,9 @@ export class LoginView extends React.Component {
     )
   }
 }
+
+LoginView = connect(
+  mapStateToProps
+)(LoginView);
+
+export default LoginView;

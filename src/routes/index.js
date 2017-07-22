@@ -2,9 +2,10 @@ import React from 'react';
 import {Route, IndexRoute} from 'react-router';
 
 // import App from '../App';
-import {MainView, LoginView} from '../views';
+import {MainView} from '../views';
+import LoginView from '../views/LoginView'
 import {Home} from '../components/Home';
-import {Profile} from '../components/Profile';
+import Profile from '../components/Profile';
 
 export default(
   <Route path='/' component={MainView}>
