@@ -1,13 +1,13 @@
 import React from 'react';
 
 export default class Profile extends React.Component {
-  constructor(props) {
+  constructor(props){
     super(props);
   }
   render(){
     return(
       <div>
-        <h1>Welcome to our ICO</h1>
+        <h1>Welcome to our App</h1>
       </div>
     )
   }

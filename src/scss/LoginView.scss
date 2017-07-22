@@ -1,17 +1,41 @@
+body {
+  font-family: 'Roboto', sans-serif;
+}
+
 .loginBlock {
-  width: 400px;
-  margin: 0 auto;
-  border: 1px solid rgba(0,0,0,0.4);
-  border-radius: 3px;
-  padding: 30px 15px;
-  color: #000;
+  padding: 60px;
+  background-color: white;
+  min-width: 320px;
+  min-height: 126px;
+  margin: auto;
+  box-shadow: 2px 2px 8px 1px rgba(0, 0, 0, 0.2);
+  max-width: 400px;
 
   input {
-    display: block;
-    padding: 4px;
-    margin-bottom: 10px;
+    background: rgba(255,255,255,.1);
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    margin: 0;
+    outline: 0;
+    padding: 7px;
     width: 100%;
     box-sizing: border-box;
+    background-color: #e8eeef;
+    color:#8a97a0;
+    box-shadow: 0 1px 0 rgba(0,0,0,0.03) inset;
+    margin-bottom: 30px;
+  }
+
+  button {
+    width: 100%;
+    padding: 3%;
+    background: #43D1AF;
+    border-bottom: 2px solid #30C29E;
+    border-top-style: none;
+    border-right-style: none;
+    border-left-style: none;
+    color: #fff;
   }
 
   h3 {

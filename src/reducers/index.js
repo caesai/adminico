@@ -1,7 +1,9 @@
 import { combineReducers } from 'redux';
+import {routerStateReducer} from 'redux-router';
 
-import Login from './login';
+import auth from './auth';
 
-const appReducers = combineReducers({Login});
-
-export default appReducers;
+export default combineReducers({
+  auth,
+  router: routerStateReducer
+});

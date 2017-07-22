@@ -1,20 +1,21 @@
 import React from 'react';
 import { Provider } from 'react-redux';
-import { Router, Route, IndexRoute, browserHistory } from 'react-router';
-import configureStore from './store/configureStore';
-
-import LoginView from './views/LoginView';
-
-const store = configureStore(browserHistory, window.__INITIAL_STATE__);
+import routes from './routes';
+import {ReduxRouter} from 'redux-router';
+import './scss/LoginView.scss';
 
 export default class App extends React.Component {
-  constructor(props) {
-    super(props);
+  static get propTypes() {
+    return {
+      store: React.PropTypes.object.isRequired
+    }
   }
   render() {
     return (
-      <Provider store={store}>
-        <LoginView />
+      <Provider store={this.props.store}>
+        <ReduxRouter>
+            {routes}
+        </ReduxRouter>
       </Provider>
     )
   }

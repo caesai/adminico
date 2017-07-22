@@ -1,33 +1,104 @@
 import React from 'react';
-import * as styles from '../scss/LoginView.scss';
 import {checkHttpStatus, parseJSON} from '../utils';
+import { push , replace } from 'redux-router';
+import { connect } from 'react-redux';
 
-export default class LoginView extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      email: '',
-      password: ''
-    }
-    this.signUp = this.signUp.bind(this);
-    this.handleInputChange = this.handleInputChange.bind(this);
-  }
-  signUp(){
+const actions = {
+  loginUserRequest: () => ({
+      type: 'LOGIN_USER_REQUEST'
+  }),
+  loginUser: (email, password, redirect='/') => (dispatch) => {
+    dispatch(actions.loginUserRequest());
     return fetch('http://localhost:3000/login', {
       method: 'post',
       headers: {
           'Accept': 'application/json',
           'Content-Type': 'application/json'
       },
-          body: JSON.stringify({email: this.state.email, password: this.state.password})
+          body: JSON.stringify({email: email, password: password})
       })
-      .then(checkHttpStatus)
-      .then(parseJSON)
-      .then(response => {
+    .then(checkHttpStatus)
+    .then(parseJSON)
+    .then(response => {
+      try {
         if (response.access == 'granted') {
-          console.log('granted');
+          dispatch(actions.loginUserSuccess(response.token));
+          dispatch(push({
+            pathname: '/profile',
+            query: { status: 'refresh' }
+          }));
+        } else {
+          dispatch(actions.loginUserFailure({
+            response: {
+              status: 403,
+              statusText: 'Credentials check failed'
+            }
+          }));
         }
+      } catch (e) {
+        dispatch(actions.loginUserFailure({
+          response: {
+            status: 403,
+            statusText: 'Invalid token'
+          }
+        }));
+      }
+    })
+    .catch(error => {
+        dispatch(actions.loginUserFailure({
+          response: {
+            status: 403,
+            statusText: 'Credentials check failed'
+          }
+        }));
     });
+  },
+  loginUserSuccess: (token) => {
+    // console.log(token);
+    return {
+      type: 'LOGIN_USER_SUCCESS',
+      payload: {
+        token: token
+      }
+    }
+  },
+  loginUserFailure: (error) => {
+    localStorage.removeItem('token');
+    return ({
+      type: 'LOGIN_USER_FAILURE',
+      payload: {
+        status: error.response.status,
+        statusText: error.response.statusText
+      }
+    })
+  }
+}
+
+const mapStateToProps = (state) => ({
+  isAuthenticating   : state.auth.isAuthenticating,
+  statusText         : state.auth.statusText,
+  location: state.router.location
+});
+
+connect(
+  mapStateToProps
+)
+
+export class LoginView extends React.Component {
+  constructor(props) {
+    super(props);
+    const redirectRoute = this.props.location.query.next || '/login';
+    this.state = {
+      email: '',
+      password: '',
+      redirectTo: redirectRoute
+    };
+    this.signUp = this.signUp.bind(this);
+    this.handleInputChange = this.handleInputChange.bind(this);
+  }
+  signUp(){
+    this.props.dispatch(actions.loginUser(this.state.email, this.state.password, this.state.redirectTo));
+    this.props.dispatch(replace('/profile'));
   }
   handleInputChange(event) {
     const target = event.target;
@@ -38,6 +109,7 @@ export default class LoginView extends React.Component {
     });
   }
   componentDidMount(){
+    console.log(this.props);
   }
   render(){
     return(

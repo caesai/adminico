@@ -1,4 +1,4 @@
-import rootReducer from '../reducers';
+import rootReducer from '../reducers/';
 import routes from '../routes';
 import {reduxReactRouter} from 'redux-router';
 import {applyMiddleware, compose, createStore} from 'redux';
