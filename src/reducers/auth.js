@@ -29,7 +29,7 @@ export default createReducer(initialState, {
             'isAuthenticated': true,
             'token': payload.token,
             'userName': 'admin',
-            // 'userName': jwtDecode(payload.token).userName,
+            'userName': payload.userName,
             'statusText': 'You have been successfully logged in.'
         });
 

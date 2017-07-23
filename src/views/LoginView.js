@@ -143,6 +143,7 @@ class LoginView extends React.Component {
     return(
       <div className="loginBlock">
         <h3>Please log in</h3>
+        {this.props.statusText ? <div className='alert alert-info'>{this.props.statusText}</div> : ''}
         <form onSubmit={(e) => {
           e.preventDefault();
           this.signUp();
