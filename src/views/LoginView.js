@@ -3,9 +3,14 @@ import {checkHttpStatus, parseJSON} from '../utils';
 import { push , replace } from 'redux-router';
 import { connect } from 'react-redux';
 
+import ledger from '../ledger/ledger.js';
+
 const actions = {
   loginUserRequest: () => ({
       type: 'LOGIN_USER_REQUEST'
+  }),
+  walletLoginRequest: () => ({
+      type: 'WALLET_LOGIN_REQUEST'
   }),
   loginUser: (email, password, redirect='/') => (dispatch) => {
     dispatch(actions.loginUserRequest());
@@ -91,8 +96,10 @@ class LoginView extends React.Component {
       password: '',
       redirectTo: redirectRoute
     };
+    this.walletLogIn = this.walletLogIn.bind(this);
     this.signUp = this.signUp.bind(this);
     this.handleInputChange = this.handleInputChange.bind(this);
+    this.closeModals = this.closeModals.bind(this);
   }
   signUp(){
     this.props.dispatch(actions.loginUser(this.state.email, this.state.password, this.state.redirectTo));
@@ -106,8 +113,31 @@ class LoginView extends React.Component {
       [name]: value
     });
   }
+  walletLogIn() {
+    ledger.hasSession();
+    this.refs.ledger.classList.toggle('active');
+    this.refs.blackBg.classList.toggle('active');
+  }
+  closeModals() {
+    this.refs.ledger.classList.toggle('active');
+    this.refs.blackBg.classList.toggle('active');
+  }
   componentDidMount(){
-    console.log(this.props);
+    let callback = (event) => {
+      if (!event.response) return;
+        if (!event.response.success) {
+          this.props.dispatch(actions.loginUserFailure({
+            response: {
+              status: 403,
+              statusText: 'Ledger Nano is not connected'
+            }
+          }));
+        } else {
+          this.props.dispatch(actions.loginUser('admin', 'admin', this.state.redirectTo));
+          this.props.dispatch(replace('/profile'));
+        }
+    };
+    ledger.init({ callback: callback });
   }
   render(){
     return(
@@ -120,7 +150,17 @@ class LoginView extends React.Component {
           <input type="text" name="email" placeholder="Enter your login or email" onChange={this.handleInputChange} value={this.state.email} />
           <input type="password" name="password" placeholder="Enter your password" onChange={this.handleInputChange} value={this.state.password} />
           <button type="submit">Sign up</button>
+          <a href='#' onClick={(e) => {
+            e.preventDefault();
+            this.walletLogIn();
+          }}>Sign me in with my Bitcoin address</a>
         </form>
+        <div ref="ledger" className="ledgerModal">
+          <p className="modalMessage"></p>
+          {this.props.statusText ? <div className='alert alert-info'>{this.props.statusText}</div> : ''}
+          <div className="closeBtn" onClick={this.closeModals}>X</div>
+        </div>
+        <div ref="blackBg" onClick={this.closeModals} className="blackBg"></div>
       </div>
     )
   }

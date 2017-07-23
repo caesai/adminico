@@ -1,9 +1,7 @@
 import React from 'react';
-import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
 import { Link } from 'react-router';
-import { push } from 'redux-router';
 
 const actions = {};
 
@@ -13,13 +11,7 @@ const mapStateToProps = (state) => ({
   location           : state.router.location
 });
 
-const mapDispatchToProps = (dispatch) => ( bindActionCreators( actionCreators, dispatch ) );
-
-connect(
-  mapStateToProps
-)
-
-export class Home extends React.Component {
+class Home extends React.Component {
   constructor(props){
     super(props);
     this.state = {};
@@ -32,3 +24,9 @@ export class Home extends React.Component {
     )
   }
 }
+
+Home = connect(
+  mapStateToProps
+)(Home);
+
+export default Home;

@@ -9,11 +9,7 @@ const mapStateToProps = (state) => ({
   location           : state.router.location
 });
 
-connect(
-     mapStateToProps
-)
-
-export class Main extends React.Component {
+class MainView extends React.Component {
   constructor(props){
     super(props);
   }
@@ -25,3 +21,7 @@ export class Main extends React.Component {
     )
   }
 }
+
+MainView = connect(mapStateToProps)(MainView);
+
+export default MainView;
